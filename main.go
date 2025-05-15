@@ -18,13 +18,13 @@ func (cfg *apiConfig) middlewareMetricsInc(next http.Handler) http.Handler {
 	})
 }
 
-func (cfg *apiConfig) metrics(w http.ResponseWriter, r *http.Request) {
+func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {
 	log.Print("Accediendo a las métricas")
 	hits := cfg.FileServerHits.Load()
 	w.Write(fmt.Appendf(nil, "Hits: %d", hits))
 }
-func (cfg *apiConfig) reset(w http.ResponseWriter, r *http.Request) {
-	cfg.FileServerHits.Swap(0)
+func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {
+	cfg.FileServerHits.Store(0)
 	w.Write([]byte("Counter reset successfully"))
 }
 
@@ -36,8 +36,8 @@ func main() {
 
 	mux.Handle("/app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app", http.FileServer(http.Dir(".")))))
 	mux.HandleFunc("/healthz", handlerReadiness)
-	mux.HandleFunc("/metrics", apiCfg.metrics)
-	mux.HandleFunc("/reset", apiCfg.reset)
+	mux.HandleFunc("/metrics", apiCfg.handlerMetrics)
+	mux.HandleFunc("/reset", apiCfg.handlerReset)
 
 	server := &http.Server{
 		Handler: mux,
