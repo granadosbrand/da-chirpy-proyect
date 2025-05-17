@@ -17,7 +17,7 @@ func main() {
 	apiCfg := &apiConfig{}
 
 	fsHandler := apiCfg.middlewareMetricsInc(http.StripPrefix("/app", http.FileServer(http.Dir("."))))
-	
+
 	mux.Handle("/app/", fsHandler)
 	mux.HandleFunc("GET /api/healthz", handlerReadiness)
 	mux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
