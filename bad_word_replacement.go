@@ -20,3 +20,4 @@ func badWordReplacement(message string, profaneWords map[string]struct{}) string
 
 	return cleanMessage
 }
+
