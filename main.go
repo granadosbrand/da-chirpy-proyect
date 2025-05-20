@@ -16,6 +16,7 @@ import (
 type apiConfig struct {
 	FileServerHits atomic.Int32
 	db             *database.Queries
+	platform       string
 }
 
 func main() {
@@ -23,6 +24,7 @@ func main() {
 	const port = "8080"
 	godotenv.Load()
 	dbUrl := os.Getenv("DB_URL")
+	platform := os.Getenv("PLATFORM")
 
 	if dbUrl == "" {
 		log.Fatal("DB_URL must be set")
@@ -38,6 +40,7 @@ func main() {
 	apiCfg := &apiConfig{
 		FileServerHits: atomic.Int32{},
 		db:             dbQueries,
+		platform: platform,
 	}
 
 	mux := http.NewServeMux()
@@ -48,6 +51,8 @@ func main() {
 	mux.HandleFunc("GET /api/healthz", handlerReadiness)
 	mux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
 	mux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
+
+	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
 
 	mux.HandleFunc("POST /api/validate_chirp", handlerValidate)
 
