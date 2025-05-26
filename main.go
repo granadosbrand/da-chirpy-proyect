@@ -54,6 +54,9 @@ func main() {
 
 	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
 
+	// Auth
+	mux.HandleFunc("POST /api/login", apiCfg.handlerLogin)
+
 	// mux.HandleFunc("POST /api/validate_chirp", )
 
 	// Chirpy CRUD
