@@ -4,8 +4,6 @@ import (
 	"strings"
 )
 
-var profaneWords = []string{"kerfuffle", "sharbert", "fornax"}
-
 func badWordReplacement(message string, profaneWords map[string]struct{}) string {
 
 	words := strings.Fields(message)
@@ -20,4 +18,3 @@ func badWordReplacement(message string, profaneWords map[string]struct{}) string
 
 	return cleanMessage
 }
-
