@@ -17,6 +17,7 @@ type apiConfig struct {
 	FileServerHits atomic.Int32
 	db             *database.Queries
 	platform       string
+	secret         string
 }
 
 func main() {
@@ -25,6 +26,7 @@ func main() {
 	godotenv.Load()
 	dbUrl := os.Getenv("DB_URL")
 	platform := os.Getenv("PLATFORM")
+	secretKey := os.Getenv("SECRET")
 
 	if dbUrl == "" {
 		log.Fatal("DB_URL must be set")
@@ -40,7 +42,8 @@ func main() {
 	apiCfg := &apiConfig{
 		FileServerHits: atomic.Int32{},
 		db:             dbQueries,
-		platform: platform,
+		platform:       platform,
+		secret:         secretKey,
 	}
 
 	mux := http.NewServeMux()
@@ -56,7 +59,9 @@ func main() {
 
 	// Auth
 	mux.HandleFunc("POST /api/login", apiCfg.handlerLogin)
-
+	mux.HandleFunc("POST /api/refresh", apiCfg.handlerRefreshToken)
+	mux.HandleFunc("POST /api/revoke", apiCfg.handlerRevokeToken)
+	
 	// mux.HandleFunc("POST /api/validate_chirp", )
 
 	// Chirpy CRUD

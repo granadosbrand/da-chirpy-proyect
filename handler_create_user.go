@@ -56,6 +56,7 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 	})
 	if err != nil {
 		respondWithError(w, 500, "Error creating user: ", err)
+		return
 	}
 
 	respondWithJSon(w, http.StatusCreated, User{
