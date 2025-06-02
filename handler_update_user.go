@@ -67,9 +67,10 @@ func (cfg *apiConfig) handlerUpdateUser(w http.ResponseWriter, r *http.Request) 
 	}
 
 	respondWithJSon(w, http.StatusOK, User{
-		Id:        newUser.ID,
-		CreatedAt: newUser.CreatedAt,
-		UpdatedAt: newUser.UpdatedAt,
-		Email:     newUser.Email,
+		Id:          newUser.ID,
+		CreatedAt:   newUser.CreatedAt,
+		UpdatedAt:   newUser.UpdatedAt,
+		Email:       newUser.Email,
+		IsChirpyRed: newUser.IsChirpyRed.Bool,
 	})
 }
